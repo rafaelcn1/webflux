@@ -13,7 +13,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 
 
-@Configuration
+//@Configuration
 public class PlaylistRouter {
 	
 	@Bean

@@ -1,18 +1,23 @@
 package com.apirest.webflux.controller;
 
+import java.time.Duration;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.apirest.webflux.document.Playlist;
 import com.apirest.webflux.services.PlaylistService;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
 
-//@RestController // Anotação para controlar as requisições
+@RestController // Anotação para controlar as requisições
 // Comentado para usar o handler e router
 public class PlaylistController {
 
@@ -34,6 +39,17 @@ public class PlaylistController {
 	@PostMapping(value="/playlist")
 	public Mono<Playlist> save(@RequestBody Playlist playlist) { // @RequestBody irá informar que uma playlist será enviada em formato de json, a playlist vai pelo corpo da requsição
 		return playlistService.save(playlist);
+	}
+	
+	@GetMapping(value="/playlist/events", produces = MediaType.TEXT_EVENT_STREAM_VALUE) // Value será o valor que o user vai digitar no navegador, e a produces será o metodo que será retornado
+	public Flux<Tuple2<Long, Playlist>> getPlaylistEvents(){
+		
+		Flux<Long> intervalo = Flux.interval(Duration.ofSeconds(10)); // Definição do intervalor
+		Flux<Playlist> playlists = playlistService.findAll(); // retorno de todas as playlists cadastradas
+		
+		Flux<Tuple2<Long, Playlist>> fluxZip = Flux.zip(intervalo, playlists); // Retorno do flux
+		
+		return fluxZip;
 	}
 
 }

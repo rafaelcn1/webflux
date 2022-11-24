@@ -14,7 +14,7 @@ import com.apirest.webflux.services.PlaylistService;
 
 import reactor.core.publisher.Mono;
 
-@Component // Para mostrar que ela será um bean e será gerenciando pelo spring
+//@Component // Para mostrar que ela será um bean e será gerenciando pelo spring
 public class PlaylistHandler {
 
 	@Autowired
